@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace EmpHierarchy
 {
@@ -8,44 +9,95 @@ namespace EmpHierarchy
     {
         public Program(string csv)
         {
-            var employees = new List<Employee>();
-            var reader = new StreamReader(File.OpenRead(@"" + csv));
-            var ceos = 0;
-            while (!reader.EndOfStream)
+
+            var employees = Employees(csv);
+            if (employees.Any())
             {
-                var line = reader.ReadLine();
-                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                var lineData = line.Split(",");
-                if (lineData.Length != 2) continue;
-
-                var empId = lineData[0];
-                var manId = lineData[1];
-                if (string.IsNullOrWhiteSpace(manId))
-                    ceos += 1;
-
-                if (ceos > 1)
+                foreach (var employee in employees)
                 {
-                    Console.WriteLine("Maximum number of CEOs exceeded");
-                    continue;
+                    if (!ManagerIsEmployee(employees, employee.ManagerId))
+                    {
+                        Console.WriteLine($"Manager {employee.ManagerId} is not an employee");
+                        employees.Remove(employee);
+                    }
+
+                    if (HasReportLoop(employees, employee.EmployeeId, employee.ManagerId))
+                    {
+                        Console.WriteLine($"Reporting loops exists for employee {employee.EmployeeId}");
+                        employees.Remove(employee);
+                    }
                 }
-
-                var isInt = int.TryParse(lineData[2], out var salary);
-                if (!isInt)
-                {
-                    Console.WriteLine($"Salary filed for {empId} is invalid");
-                    continue;
-                }
-
-                var employee = new Employee
-                {
-                    EmployeeId = empId,
-                    ManagerId = manId,
-                    Salary = salary
-                };
-                employees.Add(employee);
             }
 
+        }
+
+        private static bool ManagerIsEmployee(List<Employee> employees, string managerId)
+        {
+            return employees.Any(e => e.EmployeeId.Equals(managerId));
+        }
+
+        private static bool HasReportLoop(List<Employee> employees, string employeeId, string managerId)
+        {
+            var managerReportsTo = employees.First(e => e.EmployeeId.Equals(managerId)).ManagerId;
+            return managerReportsTo.Equals(employeeId);
+        }
+
+        private List<Employee> Employees(string fileString)
+        {
+            var employees = new List<Employee>();
+            try
+            {
+                var reader = new StreamReader(File.OpenRead(@"" + fileString));
+                var ceos = 0;
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var lineData = line.Split(",");
+                    if (lineData.Length != 2) continue;
+
+                    var managerId = lineData[1];
+                    if (string.IsNullOrWhiteSpace(managerId))
+                        ceos += 1;
+
+                    if (ceos > 1)
+                    {
+                        Console.WriteLine("Maximum number of CEOs exceeded");
+                        continue;
+                    }
+
+                    var employeeId = lineData[0];
+                    if (employees.Any(e => e.EmployeeId.Equals(employeeId)))
+                    {
+                        Console.WriteLine($"Employee {employeeId} already added");
+                        continue;
+                    }
+
+                    var isInt = int.TryParse(lineData[2], out var salary);
+                    if (!isInt)
+                    {
+                        Console.WriteLine($"Salary filed for {employeeId} is invalid");
+                        continue;
+                    }
+
+                    var employee = new Employee
+                    {
+                        EmployeeId = employeeId,
+                        ManagerId = managerId,
+                        Salary = salary
+                    };
+                    employees.Add(employee);
+                }
+
+                return employees;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error occured: {e.Message}");
+                return employees;
+            }
         }
     }
 }
