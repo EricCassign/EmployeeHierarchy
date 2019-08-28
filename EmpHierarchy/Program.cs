@@ -30,6 +30,18 @@ namespace EmpHierarchy
                 }
             }
 
+            var salaryTotal = employees.Sum(e => e.Salary);
+            Console.WriteLine($"Total valid employees {employees.Count} with total salary {salaryTotal}");
+        }
+
+        public long ManagerBudget(List<Employee> employees, string employeeId)
+        {
+            return employees.Where(e => e.ManagerId.Equals(employeeId)).Sum(e => e.Salary);
+        }
+
+        private string ReportsTo(List<Employee> employees, string employeeId)
+        {
+            return employees.First(e => e.EmployeeId.Equals(employeeId)).ManagerId;
         }
 
         private static bool ManagerIsEmployee(List<Employee> employees, string managerId)
@@ -43,7 +55,7 @@ namespace EmpHierarchy
             return managerReportsTo.Equals(employeeId);
         }
 
-        private List<Employee> Employees(string fileString)
+        private static List<Employee> Employees(string fileString)
         {
             var employees = new List<Employee>();
             try
