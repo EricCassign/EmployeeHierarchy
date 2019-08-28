@@ -16,7 +16,7 @@ namespace EmpHierarchy.Tests
             _program = new EmpHierarchyProgram(_csvData);
         }
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _employees = _program.ValidEmployees;
@@ -26,14 +26,14 @@ namespace EmpHierarchy.Tests
         public void Salaries_are_valid_integer_numbers()
         {
             var count = _employees.Count(e => !IsValidInteger(e.Salary.ToString()));
-            Assert.Equals(count, 0);
+            Assert.AreEqual(0, count);
         }
 
         [Test]
         public void Only_one_ceo()
         {
             var count = _employees.Count(e => string.IsNullOrWhiteSpace(e.ManagerId));
-            Assert.Equals(count, 1);
+            Assert.AreEqual(1, count);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace EmpHierarchy.Tests
         {
             var managers = _employees.Select(e => e.ManagerId).ToList();
             var count = _employees.Count(e => _employees.Any(l => managers.Contains(e.EmployeeId)));
-            Assert.Equals(count, managers.Count);
+            Assert.AreEqual(managers.Count, count);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace EmpHierarchy.Tests
                 .GroupBy(e => e.EmployeeId)
                 .Where(g => g.Count() > 1)
                 .ToList();
-            Assert.Equals(duplicates.Count, 0);
+            Assert.AreEqual(0, duplicates.Count);
         }
 
         #region HelperMethods
