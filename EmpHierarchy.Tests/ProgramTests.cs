@@ -39,7 +39,8 @@ namespace EmpHierarchy.Tests
         [Test]
         public void All_managers_are_employees()
         {
-            var managers = _employees.Select(e => e.ManagerId).ToList();
+            var managers = _employees.Where(e => !string.IsNullOrWhiteSpace(e.ManagerId))
+                .Select(e => e.ManagerId).Distinct().ToList();
             var count = _employees.Count(e => _employees.Any(l => managers.Contains(e.EmployeeId)));
             Assert.AreEqual(managers.Count, count);
         }
@@ -52,6 +53,14 @@ namespace EmpHierarchy.Tests
                 .Where(g => g.Count() > 1)
                 .ToList();
             Assert.AreEqual(0, duplicates.Count);
+        }
+
+        [Test]
+        public void Department_budget_includes_managers_salary()
+        {
+            var testManager = "Employee2";
+            var budget = _program.ManagerBudget(testManager);
+            Assert.AreEqual(1000, budget);
         }
 
         #region HelperMethods
