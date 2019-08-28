@@ -7,11 +7,13 @@ namespace EmpHierarchy.Tests
 {
     public class ProgramTests
     {
+        private readonly string _csvData = "Employee4,Employee2,500\r\nEmployee3,Employee1,800\r\nEmployee1,,1000\r\nEmployee5,Employee1,500\r\nEmployee2,Employee1,500\r\n";
+
         private readonly EmpHierarchyProgram _program;
         private List<Employee> _employees;
-        public ProgramTests(string csv)
+        public ProgramTests()
         {
-            _program = new EmpHierarchyProgram(csv);
+            _program = new EmpHierarchyProgram(_csvData);
         }
 
         [SetUp]
