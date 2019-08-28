@@ -5,9 +5,10 @@ using System.Linq;
 
 namespace EmpHierarchy
 {
-    public class Program
+    public class EmpHierarchyProgram
     {
-        public Program(string csv)
+        public List<Employee> ValidEmployees;
+        public EmpHierarchyProgram(string csv)
         {
 
             var employees = Employees(csv);
@@ -29,6 +30,8 @@ namespace EmpHierarchy
                     }
                 }
             }
+
+            ValidEmployees = employees;
 
             var salaryTotal = employees.Sum(e => e.Salary);
             Console.WriteLine($"Total valid employees {employees.Count} with total salary {salaryTotal}");
