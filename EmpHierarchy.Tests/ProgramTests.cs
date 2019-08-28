@@ -57,7 +57,7 @@ namespace EmpHierarchy.Tests
         private static bool IsValidInteger(string number)
         {
             var isValid = int.TryParse(number, out var validResult);
-            Console.WriteLine($" {number} output {validResult} ");
+            Console.WriteLine($"input: {number} output: {validResult} ");
             return isValid;
         }
 

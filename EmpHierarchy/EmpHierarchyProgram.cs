@@ -37,9 +37,11 @@ namespace EmpHierarchy
             Console.WriteLine($"Total valid employees {employees.Count} with total salary {salaryTotal}");
         }
 
-        public long ManagerBudget(List<Employee> employees, string employeeId)
+        public long ManagerBudget(string managerId)
         {
-            return employees.Where(e => e.ManagerId.Equals(employeeId)).Sum(e => e.Salary);
+            var staffSalary = ValidEmployees.Where(e => e.ManagerId.Equals(managerId)).Sum(e => e.Salary);
+            var manSalary = ValidEmployees.First(e => e.EmployeeId.Equals(managerId)).Salary;
+            return manSalary + staffSalary;
         }
 
         private string ReportsTo(List<Employee> employees, string employeeId)
