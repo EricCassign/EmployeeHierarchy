@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace EmpHierarchy
 {
@@ -12,6 +13,7 @@ namespace EmpHierarchy
         {
 
             var employees = Employees(csv);
+            var toRemove = new List<Employee>();
             if (employees.Any())
             {
 
@@ -20,15 +22,20 @@ namespace EmpHierarchy
                     if (!ManagerIsEmployee(employees, employee.ManagerId))
                     {
                         Console.WriteLine($"Manager {employee.ManagerId} is not an employee");
-                        employees.Remove(employee);
+                        toRemove.Add(employee);
                     }
 
                     if (HasReportLoop(employees, employee.EmployeeId, employee.ManagerId))
                     {
                         Console.WriteLine($"Reporting loops exists for employee {employee.EmployeeId}");
-                        employees.Remove(employee);
+                        toRemove.Add(employee);
                     }
                 }
+            }
+
+            if (toRemove.Any())
+            {
+                toRemove.ForEach(e => { employees.Remove(e); });
             }
 
             ValidEmployees = employees;
@@ -51,22 +58,29 @@ namespace EmpHierarchy
 
         private static bool ManagerIsEmployee(List<Employee> employees, string managerId)
         {
-            return employees.Any(e => e.EmployeeId.Equals(managerId));
+            return string.IsNullOrWhiteSpace(managerId)
+                   || employees.Any(e => e.EmployeeId.Equals(managerId));
         }
 
         private static bool HasReportLoop(List<Employee> employees, string employeeId, string managerId)
         {
-            var managerReportsTo = employees.First(e => e.EmployeeId.Equals(managerId)).ManagerId;
-            return managerReportsTo.Equals(employeeId);
+            var manager = employees.FirstOrDefault(e => e.EmployeeId.Equals(managerId));
+            if (manager == null)
+                return false;
+            return manager.ManagerId.Equals(employeeId);
         }
 
-        private static List<Employee> Employees(string fileString)
+        private List<Employee> Employees(string fileString)
         {
             var employees = new List<Employee>();
             try
             {
-                //var reader = new StreamReader(File.OpenRead(@"" + fileString));
-                var reader = new StreamReader(fileString);
+                var byteArray = Encoding.ASCII.GetBytes(fileString);
+                var stream = new MemoryStream(byteArray);
+
+                var reader = new StreamReader(stream);
+                // var text = reader.ReadToEnd();
+                //var reader = new StreamReader(File.OpenRead(@"" + fileString)); 
                 var ceos = 0;
                 while (!reader.EndOfStream)
                 {
@@ -74,7 +88,7 @@ namespace EmpHierarchy
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
                     var lineData = line.Split(",");
-                    if (lineData.Length != 2) continue;
+                    if (lineData.Length != 3) continue;
 
                     var managerId = lineData[1];
                     if (string.IsNullOrWhiteSpace(managerId))
