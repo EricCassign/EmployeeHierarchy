@@ -60,7 +60,8 @@ namespace EmpHierarchy
             var employees = new List<Employee>();
             try
             {
-                var reader = new StreamReader(File.OpenRead(@"" + fileString));
+                //var reader = new StreamReader(File.OpenRead(@"" + fileString));
+                var reader = new StreamReader(fileString);
                 var ceos = 0;
                 while (!reader.EndOfStream)
                 {

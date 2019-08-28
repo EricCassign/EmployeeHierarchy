@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpHierarchy", "EmpHierarchy\EmpHierarchy.csproj", "{EBE9EFE3-AF36-4528-9080-53F6F26336D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmpHierarchy", "EmpHierarchy\EmpHierarchy.csproj", "{EBE9EFE3-AF36-4528-9080-53F6F26336D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpHierarchy.Tests", "EmpHierarchy.Tests\EmpHierarchy.Tests.csproj", "{A2294DAD-EBC7-422B-BDEC-B6C593FC7582}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EBE9EFE3-AF36-4528-9080-53F6F26336D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE9EFE3-AF36-4528-9080-53F6F26336D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE9EFE3-AF36-4528-9080-53F6F26336D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2294DAD-EBC7-422B-BDEC-B6C593FC7582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2294DAD-EBC7-422B-BDEC-B6C593FC7582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2294DAD-EBC7-422B-BDEC-B6C593FC7582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2294DAD-EBC7-422B-BDEC-B6C593FC7582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
